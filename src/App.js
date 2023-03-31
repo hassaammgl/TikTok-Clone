@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import Video from './components/Video';
+import './styles/App.css';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function App() {
+
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await axios.get('http://localhost:4000/v2/posts');
+      setVideos(response.data.dbVideos);
+      return response;
+    }
+    fetchPosts();
+  }, [])
+
+  console.log(videos);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="app_videos">
+        {videos.map(({ url, channel, description, song, likes, messages, shares, _id }) => (
+          <Video
+            key={_id}
+            url={url}
+            channel={channel}
+            description={description}
+            song={song}
+            likes={likes}
+            shares={shares}
+            messages={messages}
+          />
+        ))}
+        {/* <Video url={v1} channel={"Hassaam"} description={"This MERN Tik tok Clone"} song={"Ha ha"} likes={1234} shares={2} messages={23} /> */}
+        {/* <Video url={v1} channel={"Hassaam"} description={"This MERN Tik tok Clone"} song={"Ha ha"} likes={1234} shares={2} messages={23} /> */}
+      </div>
     </div>
   );
 }
